@@ -2,6 +2,7 @@ package facades;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaQuery;
 
 /**
@@ -11,13 +12,17 @@ import javax.persistence.criteria.CriteriaQuery;
  */
 public abstract class AbstractFacade<T> {
 
+    private final EntityManagerFactory emf;
     private final Class<T> ENTITY_CLASS;
 
-    public AbstractFacade(Class<T> entityClass) {
+    public AbstractFacade(Class<T> entityClass, EntityManagerFactory emf) {
         this.ENTITY_CLASS = entityClass;
+        this.emf = emf;
     }
 
-    protected abstract EntityManager getEntityManager();
+    protected EntityManager getEntityManager() {
+        return emf.createEntityManager();
+    }
 
     public void create(T entity) {
         EntityManager em = getEntityManager();
@@ -46,7 +51,7 @@ public abstract class AbstractFacade<T> {
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
-            em.remove(em.find(ENTITY_CLASS,entity));
+            em.remove(em.find(ENTITY_CLASS, entity));
             em.getTransaction().commit();
         } finally {
             em.close();

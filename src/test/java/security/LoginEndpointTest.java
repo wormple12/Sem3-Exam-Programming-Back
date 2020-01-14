@@ -5,7 +5,6 @@
  */
 package security;
 
-import entities.RenameMe;
 import entities.Role;
 import entities.User;
 import io.restassured.RestAssured;

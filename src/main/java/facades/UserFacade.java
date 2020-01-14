@@ -15,7 +15,7 @@ public class UserFacade extends AbstractFacade<User> {
     private static UserFacade instance;
 
     public UserFacade() {
-        super(User.class);
+        super(User.class, emf);
     }
 
     /**
@@ -29,11 +29,6 @@ public class UserFacade extends AbstractFacade<User> {
             instance = new UserFacade();
         }
         return instance;
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return emf.createEntityManager();
     }
 
     public User getVeryfiedUser(String username, String password) throws AuthenticationException {
