@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "WeekMenuPlan")
 @NamedQueries({
     @NamedQuery(name = "WeekMenuPlan.findAll", query = "SELECT w FROM WeekMenuPlan w"),
-    @NamedQuery(name = "WeekMenuPlan.deleteAllRows", query = "DELETE from WeekMenuPlan")})
+    @NamedQuery(name = "WeekMenuPlan.deleteAll", query = "DELETE from WeekMenuPlan")})
 public class WeekMenuPlan implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,7 +33,7 @@ public class WeekMenuPlan implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "weekNo")
@@ -51,21 +51,20 @@ public class WeekMenuPlan implements Serializable {
     public WeekMenuPlan() {
     }
 
-    public WeekMenuPlan(Integer id) {
+    public WeekMenuPlan(Long id) {
         this.id = id;
     }
 
-    public WeekMenuPlan(Integer id, int weekNo, int year) {
-        this.id = id;
+    public WeekMenuPlan(int weekNo, int year) {
         this.weekNo = weekNo;
         this.yearNo = year;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

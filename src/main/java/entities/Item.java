@@ -1,23 +1,17 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -27,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "Item")
 @NamedQueries({
     @NamedQuery(name = "Item.findAll", query = "SELECT i FROM Item i"),
-    @NamedQuery(name = "Item.deleteAllRows", query = "DELETE from Item")})
+    @NamedQuery(name = "Item.deleteAll", query = "DELETE from Item")})
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,7 +29,7 @@ public class Item implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -55,22 +49,21 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(Integer id) {
+    public Item(Long id) {
         this.id = id;
     }
 
-    public Item(Integer id, String name, double pricePrKg, int storageAmount) {
-        this.id = id;
+    public Item(String name, double pricePrKg, int storageAmount) {
         this.name = name;
         this.pricePrKg = pricePrKg;
         this.storageAmount = storageAmount;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

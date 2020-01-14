@@ -14,7 +14,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -24,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "Ingredient")
 @NamedQueries({
     @NamedQuery(name = "Ingredient.findAll", query = "SELECT i FROM Ingredient i"),
-    @NamedQuery(name = "Ingredient.deleteAllRows", query = "DELETE from Ingredient")})
+    @NamedQuery(name = "Ingredient.deleteAll", query = "DELETE from Ingredient")})
 public class Ingredient implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,7 +31,7 @@ public class Ingredient implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "amount")
@@ -47,20 +46,20 @@ public class Ingredient implements Serializable {
     public Ingredient() {
     }
 
-    public Ingredient(Integer id) {
+    public Ingredient(Long id) {
         this.id = id;
     }
 
-    public Ingredient(Integer id, int amount) {
-        this.id = id;
+    public Ingredient(Item item, int amount) {
+        this.item = item;
         this.amount = amount;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

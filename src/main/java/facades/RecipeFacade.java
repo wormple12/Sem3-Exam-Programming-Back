@@ -1,6 +1,9 @@
 package facades;
 
+import entities.Ingredient;
+import entities.Item;
 import entities.Recipe;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
@@ -10,9 +13,13 @@ public class RecipeFacade extends AbstractFacade<Recipe> {
 
     private static EntityManagerFactory emf;
     private static RecipeFacade instance;
+//    private final AbstractFacade<Ingredient> ingredientFacade;
+//    private final AbstractFacade<Item> itemFacade;
 
     public RecipeFacade() {
         super(Recipe.class, emf);
+//        ingredientFacade = new AbstractFacade(Ingredient.class, emf) {};
+//        itemFacade = new AbstractFacade(Item.class, emf) {};
     }
 
     /**
