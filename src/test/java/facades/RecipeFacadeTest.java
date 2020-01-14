@@ -85,7 +85,7 @@ public class RecipeFacadeTest {
             em.persist(item_2);
             em.persist(item_3);
             em.persist(item_4);
-//            em.persist(ingr_1);
+//            em.persist(ingr_1); // cascades from Recipe instead
 //            em.persist(ingr_2);
             em.persist(r_1);
             em.getTransaction().commit();
@@ -107,7 +107,7 @@ public class RecipeFacadeTest {
         assertEquals(3, result.getIngredientList().size());
         result.getIngredientList().forEach(i -> {
             assertNotNull(i.getId());
-            assertFalse(i.getItem() == null);
+            assertNotNull(i.getItem());
         });
     }
 
