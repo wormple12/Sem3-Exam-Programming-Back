@@ -143,7 +143,7 @@ public class RecipeResource {
     @GET
     @Path("/items")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"admin"})
+    @RolesAllowed({"user", "admin"})
     @Operation(summary = "Fetches all ingredient items in the database",
             tags = {"All ingredient items endpoint"},
             responses = {
