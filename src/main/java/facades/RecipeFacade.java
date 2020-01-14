@@ -13,8 +13,6 @@ public class RecipeFacade extends AbstractFacade<Recipe> {
 
     private static EntityManagerFactory emf;
     private static RecipeFacade instance;
-//    private final AbstractFacade<Ingredient> ingredientFacade;
-//    private final AbstractFacade<Item> itemFacade;
 
     public RecipeFacade() {
         super(Recipe.class, emf);

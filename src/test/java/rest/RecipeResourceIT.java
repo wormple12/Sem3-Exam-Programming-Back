@@ -258,12 +258,24 @@ public class RecipeResourceIT {
                 .then()
                 .assertThat()
                 .statusCode(200);
-        
+
         assertEquals(listSize - 1, facade.findAll().size());
         assertNull(facade.find(r_1.getId()));
         assertNull(ingr_facade.find(ingr_1.getId()));
         assertNull(ingr_facade.find(ingr_2.getId()));
         assertNotNull(item_facade.find(item_1.getId()));
+    }
+
+    @Test
+    public void testGetAllItems() {
+        login("admin", "test");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .get("/recipe/items").then()
+                .assertThat()
+                .statusCode(200)
+                .body("size", is(4));
     }
 
 }

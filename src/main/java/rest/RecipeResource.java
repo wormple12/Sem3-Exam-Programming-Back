@@ -1,7 +1,10 @@
 package rest;
 
+import dto.ItemDTO;
 import dto.RecipeDTO;
+import entities.Item;
 import entities.Recipe;
+import facades.AbstractFacade;
 import facades.RecipeFacade;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,12 +52,14 @@ import utils.EMF_Creator;
             )
 
         }
-) 
+)
 @Path("recipe")
 public class RecipeResource {
-    
+
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
     private static final RecipeFacade FACADE = RecipeFacade.getRecipeFacade(EMF);
+    private static final AbstractFacade ITEM_FACADE = new AbstractFacade(Item.class, EMF) {
+    };
 
     @Context
     private UriInfo context;
@@ -92,7 +97,7 @@ public class RecipeResource {
         });
         return list;
     }
-    
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -102,7 +107,7 @@ public class RecipeResource {
                 @ApiResponse(responseCode = "200", description = "Recipe Created"),
                 @ApiResponse(responseCode = "400", description = "Not all arguments provided with the body")
             })
-    public RecipeDTO createRest(Recipe entity) {
+    public RecipeDTO createRecipe(Recipe entity) {
         Recipe created = FACADE.create(entity);
         return new RecipeDTO(created);
     }
@@ -116,7 +121,7 @@ public class RecipeResource {
                 @ApiResponse(responseCode = "200", description = "Recipe Edited"),
                 @ApiResponse(responseCode = "400", description = "Not all arguments provided with the body to edit")
             })
-    public RecipeDTO editRest(Recipe entity) {
+    public RecipeDTO editRecipe(Recipe entity) {
         Recipe edited = FACADE.edit(entity);
         return new RecipeDTO(edited);
     }
@@ -130,9 +135,29 @@ public class RecipeResource {
                 @ApiResponse(responseCode = "200", description = "Recipe Edited"),
                 @ApiResponse(responseCode = "400", description = "Not all arguments provided to delete")
             })
-    public RecipeDTO deleteRest(@PathParam("id") Long id) {
+    public RecipeDTO deleteRecipe(@PathParam("id") Long id) {
         Recipe deleted = FACADE.remove(id);
         return new RecipeDTO(deleted);
+    }
+
+    @GET
+    @Path("/items")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin"})
+    @Operation(summary = "Fetches all ingredient items in the database",
+            tags = {"All ingredient items endpoint"},
+            responses = {
+                @ApiResponse(
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = Recipe.class))),
+                @ApiResponse(responseCode = "200", description = "The requested items were returned"),
+                @ApiResponse(responseCode = "400", description = "The server cannot or will not process the request and no resources were returned")})
+    public List<ItemDTO> getAllItems() {
+        List<ItemDTO> list = new ArrayList();
+        List<Item> items = ITEM_FACADE.findAll();
+        items.forEach((item) -> {
+            list.add(new ItemDTO(item));
+        });
+        return list;
     }
 
 }

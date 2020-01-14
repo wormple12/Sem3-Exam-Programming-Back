@@ -147,9 +147,15 @@ public class RecipeFacadeTest {
     @Test
     public void testFindAllRecipes() {
         final List<Recipe> recipes = facade.findAll();
-        assertEquals(1, facade.findAll().size());
+        assertEquals(1, recipes.size());
         assertEquals(r_1.getId(), recipes.get(0).getId());
         assertEquals(r_1.getIngredientList().size(), recipes.get(0).getIngredientList().size());
+    }
+    
+    @Test
+    public void testFindAllItems() {
+        final List<Item> items = item_facade.findAll();
+        assertEquals(4, items.size());
     }
 
 }
