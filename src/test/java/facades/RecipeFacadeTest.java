@@ -122,9 +122,8 @@ public class RecipeFacadeTest {
         r_edited.addIngredient(i_edited);
         r_edited.addIngredient(i_new);
         r_edited.setId(r_1.getId());
-        facade.edit(r_edited);
+        Recipe result = facade.edit(r_edited);
 
-        Recipe result = (Recipe) facade.find(r_1.getId());
         assertEquals(30, (int) result.getPreparationTime());
         assertEquals(2, result.getIngredientList().size());
         Ingredient i_result = (Ingredient) ingr_facade.find(ingr_1.getId());

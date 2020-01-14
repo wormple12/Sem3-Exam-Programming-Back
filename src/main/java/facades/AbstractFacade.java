@@ -24,7 +24,7 @@ public abstract class AbstractFacade<T> {
         return emf.createEntityManager();
     }
 
-    public void create(T entity) {
+    public T create(T entity) {
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
@@ -33,9 +33,10 @@ public abstract class AbstractFacade<T> {
         } finally {
             em.close();
         }
+        return entity;
     }
 
-    public void edit(T entity) {
+    public T edit(T entity) {
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
@@ -44,18 +45,21 @@ public abstract class AbstractFacade<T> {
         } finally {
             em.close();
         }
-
+        return entity;
     }
 
-    public void remove(long entity) {
+    public T remove(long id) {
         EntityManager em = getEntityManager();
+        T entity = null;
         try {
             em.getTransaction().begin();
-            em.remove(em.find(ENTITY_CLASS, entity));
+            entity = em.find(ENTITY_CLASS, id);
+            em.remove(entity);
             em.getTransaction().commit();
         } finally {
             em.close();
         }
+        return entity;
     }
 
     public T find(Object id) {

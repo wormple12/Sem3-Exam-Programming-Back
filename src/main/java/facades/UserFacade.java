@@ -46,7 +46,7 @@ public class UserFacade extends AbstractFacade<User> {
     }
 
     @Override
-    public void create(User user) {
+    public User create(User user) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -58,6 +58,7 @@ public class UserFacade extends AbstractFacade<User> {
         } finally {
             em.close();
         }
+        return user;
     }
 
 }
