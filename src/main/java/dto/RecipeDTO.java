@@ -23,6 +23,7 @@ public class RecipeDTO {
     private List<IngredientDTO> ingredientList = new ArrayList();
 
     public RecipeDTO(Recipe r) {
+        this.id = r.getId();
         this.title = r.getTitle();
         this.preparationTime = r.getPreparationTime();
         this.directions = r.getDirections();

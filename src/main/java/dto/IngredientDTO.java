@@ -16,6 +16,7 @@ public class IngredientDTO {
     private ItemDTO item;
 
     public IngredientDTO(Ingredient i) {
+        this.id = i.getId();
         this.item = new ItemDTO(i.getItem());
         this.amount = i.getAmount();
     }

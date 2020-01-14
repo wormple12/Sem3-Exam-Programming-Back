@@ -19,6 +19,7 @@ public class ItemDTO {
     private int storageAmount;
 
     public ItemDTO(Item i) {
+        this.id = i.getId();
         this.name = i.getName();
         this.pricePrKg = i.getPricePrKg();
         this.storageAmount = i.getStorageAmount();
