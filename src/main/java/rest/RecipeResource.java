@@ -2,8 +2,10 @@ package rest;
 
 import dto.ItemDTO;
 import dto.RecipeDTO;
+import dto.WeekMenuPlanDTO;
 import entities.Item;
 import entities.Recipe;
+import entities.WeekMenuPlan;
 import facades.AbstractFacade;
 import facades.RecipeFacade;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -15,6 +17,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
@@ -60,6 +64,8 @@ public class RecipeResource {
     private static final RecipeFacade FACADE = RecipeFacade.getRecipeFacade(EMF);
     private static final AbstractFacade ITEM_FACADE = new AbstractFacade(Item.class, EMF) {
     };
+    private static final AbstractFacade PLAN_FACADE = new AbstractFacade(WeekMenuPlan.class, EMF) {
+    };
 
     @Context
     private UriInfo context;
@@ -86,7 +92,7 @@ public class RecipeResource {
             tags = {"All recipes endpoint"},
             responses = {
                 @ApiResponse(
-                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = Recipe.class))),
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = RecipeDTO.class))),
                 @ApiResponse(responseCode = "200", description = "The requested recipes were returned"),
                 @ApiResponse(responseCode = "400", description = "The server cannot or will not process the request and no resources were returned")})
     public List<RecipeDTO> getAllRecipes() {
@@ -148,16 +154,53 @@ public class RecipeResource {
             tags = {"All ingredient items endpoint"},
             responses = {
                 @ApiResponse(
-                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = Recipe.class))),
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ItemDTO.class))),
                 @ApiResponse(responseCode = "200", description = "The requested items were returned"),
                 @ApiResponse(responseCode = "400", description = "The server cannot or will not process the request and no resources were returned")})
     public List<ItemDTO> getAllItems() {
-        List<ItemDTO> list = new ArrayList();
-        List<Item> items = ITEM_FACADE.findAll();
+        final List<ItemDTO> list = new ArrayList();
+        final List<Item> items = ITEM_FACADE.findAll();
         items.forEach((item) -> {
             list.add(new ItemDTO(item));
         });
         return list;
+    }
+
+    // NOT TESTED
+    @GET
+    @Path("/plans/latest")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user", "admin"})
+    @Operation(summary = "Fetches Week Menu Plan for the latest year and week",
+            tags = {"Latest week menu plan endpoint"},
+            responses = {
+                @ApiResponse(
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = WeekMenuPlanDTO.class))),
+                @ApiResponse(responseCode = "200", description = "The requested plan was returned"),
+                @ApiResponse(responseCode = "400", description = "The server cannot or will not process the request and no resources were returned")})
+    public WeekMenuPlanDTO getLatestMenuPlan() {
+        final List<WeekMenuPlan> plans = PLAN_FACADE.findAll();
+        Comparator<WeekMenuPlan> compareByYearAndWeek = Comparator
+                .comparingInt(WeekMenuPlan::getYearNo)
+                .thenComparingInt(WeekMenuPlan::getWeekNo);
+        Collections.sort(plans, compareByYearAndWeek);
+        return new WeekMenuPlanDTO(plans.get(0));
+    }
+
+    // NOT TESTED
+    @POST
+    @Path("/plans")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user", "admin"})
+    @Operation(summary = "WeekMenuPlan Creation", tags = {"WeekMenuPlan endpoint"},
+            responses = {
+                @ApiResponse(responseCode = "200", description = "WeekMenuPlan Created"),
+                @ApiResponse(responseCode = "400", description = "Not all arguments provided with the body")
+            })
+    public WeekMenuPlanDTO createMenuPlan(WeekMenuPlan entity) {
+        WeekMenuPlan created = (WeekMenuPlan) PLAN_FACADE.create(entity);
+        return new WeekMenuPlanDTO(created);
     }
 
 }
